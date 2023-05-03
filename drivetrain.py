@@ -2,7 +2,7 @@ import wpilib
 
 from wpilib.drive import DifferentialDrive
 import math
-from wpilib import Spark,Joystick
+from wpilib import Spark
 import romi
 class Drivetrain:
 
@@ -34,13 +34,13 @@ class Drivetrain:
         """
         self.drive.arcadeDrive(rot, fwd)
 
-    def getGyroAngleZ(self):
+    def getGyroAngleY(self):
         """
         Give the twist of the robot
         :return: the current twist angle in degrees
         """
 
-        return self.gyro.getAngleZ()
+        return self.gyro.getAngleY()
 
     def resetGyro(self):
         """Resets the angles to all be 0."""

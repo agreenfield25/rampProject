@@ -5,7 +5,7 @@ from wpimath.controller import PIDController
 
 class Rampstop():
 
-    def __init__(self, drivetrain,ontheramp):
+    def __init__(self, drivetrain,ontheramp,current_reading):
         self.drivetrain=drivetrain
         #self.goal=goal_in_meters
         #self.kp=-20
@@ -21,13 +21,13 @@ class Rampstop():
         difference = self.drivetrain.getLeftDistanceMeter() - self.drivetrain.getRightDistanceMeter()
         rotate = self.pid_controller.calculate(difference)
 
-        if self.ontheramp=0:
+        if self.ontheramp==0:
             forward = .5
         if self.current_reading>10:
             forward = .3
             self.ontheramp=1
 
-        if self.ontheramp=1 and self.current_reading<2:
+        if self.ontheramp==1 and self.current_reading<2:
             self.drivetrain.arcadeDrive(0,0)
 
         if self.pid_controller.atSetpoint():
