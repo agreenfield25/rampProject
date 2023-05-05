@@ -10,6 +10,8 @@ class Drivetrain:
     def __init__(self):
         self.left_motor=Spark(0)
         self.right_motor=Spark(1)
+        self.leftEncoder=wpilib.Encoder(4,5)
+        self.rightEncoder=wpilib.Encoder(6,7)
         # Set up the differential drive controller
         self.drive = wpilib.drive.DifferentialDrive(self.left_motor, self.right_motor)
         # Use meters as unit for encoder distances

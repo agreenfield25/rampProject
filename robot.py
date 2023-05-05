@@ -9,7 +9,7 @@ class Robot(TimedRobot):
 
 
 
-    def robotInit(self) -> None:
+    def robotInit(self,container):
         self.container = RobotContainer()
 
 

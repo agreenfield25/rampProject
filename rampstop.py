@@ -26,6 +26,7 @@ class Rampstop():
         if self.current_reading>10:
             forward = .3
             self.ontheramp=1
+            print("On The Ramp")
 
         if self.ontheramp==1 and self.current_reading<2:
             self.drivetrain.arcadeDrive(0,0)
