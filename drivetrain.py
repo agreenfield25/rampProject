@@ -8,6 +8,8 @@ class Drivetrain:
 
 
     def __init__(self):
+        self.kCountsPerRevolution = 1440.0
+        self.kWheelDiameterMeter = 0.07
         self.left_motor=Spark(0)
         self.right_motor=Spark(1)
         self.leftEncoder=wpilib.Encoder(4,5)
@@ -26,6 +28,11 @@ class Drivetrain:
         self.gyro=romi.RomiGyro()
 
         self.accelerometer=wpilib.BuiltInAccelerometer()
+
+    def resetEncoders(self) -> None:
+        """Resets the drive encoders to currently read a position of 0."""
+        self.leftEncoder.reset()
+        self.rightEncoder.reset()
 
     def arcadeDrive(self, rot: float, fwd: float) -> None:
         """

@@ -14,8 +14,9 @@ class RobotContainer:
         self._configure()
 
     def _configure(self):
-        self.chooser.setDefaultOption("Ramp", Rampstop(self.drivetrain, .5))
+        self.chooser.setDefaultOption("Ramp", Rampstop(self.drivetrain))
+        self.chooser.addOption("DriveStraight",DriveStraight(self.drivetrain,.5))
         wpilib.SmartDashboard.putData(self.chooser)
 
-    def get_autonomous(self):
+    def get_autonomous(self)->AutoRoutine:
         return self.chooser.getSelected()
