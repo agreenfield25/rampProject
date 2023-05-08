@@ -12,7 +12,7 @@ class Rampstop():
         self.pid_controller=PIDController(-20,0,0)
         self.pid_controller.setSetpoint(0)
         self.pid_controller.setTolerance(.05)
-        self.ontheramp = 0
+        self.ontheramp=False
         self.current_reading = 0
 
     def run(self):
@@ -22,20 +22,21 @@ class Rampstop():
         difference = self.drivetrain.getLeftDistanceMeter() - self.drivetrain.getRightDistanceMeter()
         rotate = self.pid_controller.calculate(difference)
 
-        if self.ontheramp==0:
-            forward = .5
-            return (f"gyro:{self.current_reading}")
-        if self.current_reading>10:
+        if not self.ontheramp:
             forward = .3
-            self.ontheramp=1
+            print (f"gyro:{self.current_reading}")
+        if self.current_reading>3:
+            forward = .2
+            self.ontheramp=True
             print("On The Ramp")
-            return (f"gyro:{self.current_reading}")
+            print (f"gyro:{self.current_reading}")
 
-        if self.ontheramp==1 and self.current_reading<2:
+        if self.ontheramp==True and self.current_reading>5:
             self.drivetrain.arcadeDrive(0,0)
 
         if self.pid_controller.atSetpoint():
             self.rotate=0
         else:
             print( f"Fwd: {forward}, Rot: {rotate}  distance:{self.drivetrain.averageDistanceMeter()} difference:{difference}")
-            self.drivetrain.arcadeDrive(rotate, forward)
+
+        self.drivetrain.arcadeDrive(forward,rotate)

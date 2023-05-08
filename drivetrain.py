@@ -34,6 +34,21 @@ class Drivetrain:
         self.leftEncoder.reset()
         self.rightEncoder.reset()
 
+    def getLeftEncoderCount(self) -> int:
+        return self.leftEncoder.get()
+
+    def getRightEncoderCount(self) -> int:
+        return self.rightEncoder.get()
+
+    def getLeftDistanceMeter(self) -> float:
+        return self.leftEncoder.getDistance()
+
+    def getRightDistanceMeter(self) -> float:
+        return self.rightEncoder.getDistance()
+
+    def averageDistanceMeter(self) -> float:
+        return (self.getRightDistanceMeter() + self.getLeftDistanceMeter()) / 2.0
+
     def arcadeDrive(self, rot: float, fwd: float) -> None:
         """
         Drives the robot using arcade controls.

@@ -27,4 +27,4 @@ class DriveStraight(AutoRoutine):
             #rotate=0
             #forward=.4
             print(f"Fwd: {forward}, Rot: {rotate}  distance:{self.drivetrain.averageDistanceMeter()} difference:{difference}")
-            self.drivetrain.arcadeDrive(rotate, forward)
+            self.drivetrain.arcadeDrive(forward, rotate)

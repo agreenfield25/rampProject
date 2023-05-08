@@ -18,9 +18,9 @@ class Robot(TimedRobot):
         ...
 
     def teleopPeriodic(self) -> None:
-        forward = self.container.controller.getRawAxis(1)
-        rotate = self.container.controller.getRawAxis(0)
-        self.container.drivetrain.arcadeDrive(rotate, forward)
+        forward = self.container.controller.getRawAxis(0)
+        rotate = self.container.controller.getRawAxis(1)
+        self.container.drivetrain.arcadeDrive(forward,rotate)
         print(f"Forward: {forward}, Rotate: {rotate}")
 
     def autonomousInit(self) -> None:
