@@ -1,7 +1,7 @@
 import wpilib
 
 from drivestraight import DriveStraight
-from rampstop import Rampstop
+from rampstop import ClimbRamp
 from drivetrain import Drivetrain
 from autoroutine import AutoRoutine
 
@@ -14,7 +14,7 @@ class RobotContainer:
         self._configure()
 
     def _configure(self):
-        self.chooser.setDefaultOption("Ramp", Rampstop(self.drivetrain))
+        self.chooser.setDefaultOption("Ramp", ClimbRamp(self.drivetrain))
         self.chooser.addOption("DriveStraight",DriveStraight(self.drivetrain,.5))
         wpilib.SmartDashboard.putData(self.chooser)
 

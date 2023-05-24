@@ -1,42 +1,53 @@
-import wpilib
-
 from wpimath.controller import PIDController
-
-
-class Rampstop():
-
-    def __init__(self, drivetrain):
-        self.drivetrain=drivetrain
-        #self.goal=goal_in_meters
-        #self.kp=-20
-        self.pid_controller=PIDController(-20,0,0)
-        self.pid_controller.setSetpoint(0)
-        self.pid_controller.setTolerance(.05)
-        self.ontheramp=False
-        self.current_reading = 0
-
+from autoroutine import AutoRoutine
+from drivetrain import Drivetrain
+class ClimbRamp(AutoRoutine):
+    forward_rate = .8
+    ended_ramp = False
+    started_ramp = False
+    def __init__(self, drivetrain: Drivetrain):
+        self.drivetrain = drivetrain
+        self.drivetrain.resetGyro()
+        self.direction_controller = PIDController(4 / 10000, 2 / 10000, 0)
+        self.direction_controller.setSetpoint(0)
+        self.direction_controller.setTolerance(10)
+        self.drivetrain.resetEncoders()
+        self.reset()
     def run(self):
-        forward=0
-        self.current_reading = self.drivetrain.getGyroAngleY()
-
-        difference = self.drivetrain.getLeftDistanceMeter() - self.drivetrain.getRightDistanceMeter()
-        rotate = self.pid_controller.calculate(difference)
-
-        if not self.ontheramp:
-            forward = .3
-            print (f"gyro:{self.current_reading}")
-        if self.current_reading>3:
-            forward = .2
-            self.ontheramp=True
-            print("On The Ramp")
-            print (f"gyro:{self.current_reading}")
-
-        if self.ontheramp==True and self.current_reading>5:
-            self.drivetrain.arcadeDrive(0,0)
-
-        if self.pid_controller.atSetpoint():
-            self.rotate=0
+        if not (self.started_ramp or self.ended_ramp):
+            self.drive_straight()
+            self.started_ramp = self.did_tip_up()
+        elif self.started_ramp and not self.ended_ramp:
+            self.drive_straight()
+            self.ended_ramp = self.reached_top()
         else:
-            print( f"Fwd: {forward}, Rot: {rotate}  distance:{self.drivetrain.averageDistanceMeter()} difference:{difference}")
-
-        self.drivetrain.arcadeDrive(forward,rotate)
+            self.drivetrain.arcadeDrive(0, 0)
+    def drive_straight(self):
+        error = self.drivetrain.getLeftEncoderCount() -self.drivetrain.getRightEncoderCount()
+        rotate = self.direction_controller.calculate(error)
+        at_set_point = self.direction_controller.atSetpoint()
+        print(f"{at_set_point=} {rotate=} {error=}")
+        if not at_set_point:
+            self.drivetrain.arcadeDrive(rotate, self.forward_rate)
+        else:
+            self.drivetrain.arcadeDrive(0, self.forward_rate)
+    def did_tip_up(self) -> bool:
+        tip = self.drivetrain.getGyroAngleY()
+        print(f"{tip=}")
+        if tip > 7:
+            print("On Ramp")
+            self.forward_rate = .5
+            return True
+        return False
+    def reached_top(self) -> bool:
+        tip = self.drivetrain.getGyroAngleY()
+        print(f"{tip=}")
+        if tip < 4:
+            print("Finished Ramp")
+            self.forward_rate = 0
+            return True
+        return False
+    def reset(self) -> None:
+        self.ended_ramp = False
+        self.started_ramp = False
+        self.forward_rate = .8
